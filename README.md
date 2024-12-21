@@ -255,4 +255,6 @@ k8s;
 На основании [swagger](./Exc5/Swagger.api) предлагается рассмотреть решение на
 [GraphQL](./Exc5/GraphQL.api).
 
+## Задание 6. Настройка Rate Limiting
 
+Задание выполнено в [файле конфигурации NGINX](./Exc6/nginx.cfg).
