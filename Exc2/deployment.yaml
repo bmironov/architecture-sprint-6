@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-app-sprint-6
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-app-sprint-6
+  template:
+    metadata:
+      labels:
+        app: test-app-sprint-6
+    spec:
+      containers:
+      - name: test-app-sprint-6
+        image: shestera/scaletestapp
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+#            cpu: 30m
+            memory: 30Mi
+          limits:
+#            cpu: 30m
+            memory: 30Mi
+        ports:
+        - name: api
+          containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-app-sprint-6
+  namespace: default
+  labels:
+    app: test-app-sprint-6
+spec:
+#  type: NodePort
+  selector:
+    app: test-app-sprint-6
+  ports:
+  - name: api
+    port: 8080
+    targetPort: api
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: test-app-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: test-app-sprint-6
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+    - type: Pods
+      pods:
+        metric:
+          name: http_requests_per_second
+        target:
+          type: AverageValue
+          averageValue: 50
+#    resource:
+#      name: memory
+#      target:
+#        type: Utilization
+#        averageUtilization: 80
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: test-app-sm
+  namespace: default
+  labels:
+    serviceMonitorSelector: prometheus
+    release: prometheus-operator # берется из меток сервиса prometheus-operator-kube-p-operator. Без этой метки Prometheus не может подключиться к ServiceMonitor
+spec:
+  endpoints:
+    - port: api
+      path: /metrics
+      interval: 10s      
+  namespaceSelector:
+    matchNames:
+      - default
+  selector:
+    matchLabels:
+      app: test-app-sprint-6
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: prometheus
+spec:
+  serviceAccountName: prometheus
+  serviceMonitorSelector:
+    matchLabels:
+      serviceMonitorSelector: prometheus

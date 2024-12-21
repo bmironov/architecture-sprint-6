@@ -1,0 +1,6 @@
+boris@DESKTOP-B8Q2I8D:~$ kubectl get hpa
+NAME           REFERENCE             TARGETS           MINPODS   MAXPODS   REPLICAS   AGE
+test-app-hpa   Deployment/test-app   memory: 15%/10%   1         10        8          32m
+boris@DESKTOP-B8Q2I8D:~$ kubectl get hpa
+NAME           REFERENCE             TARGETS           MINPODS   MAXPODS   REPLICAS   AGE
+test-app-hpa   Deployment/test-app   memory: 13%/10%   1         10        10         38m
