@@ -242,6 +242,8 @@ k8s;
 - [Locust_report.html](./Exc2/Locust_report.html) - отчет Locust;
 - [replicaset.png](./Exc2/replicaset.png) - копия экрана k8s во время теста.
 
+Выполнение дополнительного задания описано в [README](./Exc2/README.md).
+
 ## Задание 3. Переход на Event-Driven архитектуру
 
 Решение этого задания представлено в следующем [документе](./Exc3/README.md).
